@@ -1,12 +1,16 @@
 require_relative 'cell'
+#require_relative 'game'
 
 module TicTacToe
   class Board
     attr_reader :grid
+    attr_accessor :move_symbol
 
     def initialize
       @grid = createBoard
       @winState = {}
+      @players = {}
+      @move_symbol = nil
     end
 
     def createBoard
@@ -26,15 +30,10 @@ module TicTacToe
     end
 
     def placeMove(player, position)
-      if player.id == 0
-        move_symbol = :x
-      else
-        move_symbol = :o
-      end
       row_index = position[:row]
       col_index = position[:col]
       cell_to_change = @grid[row_index][col_index]
-      cell_to_change.status = move_symbol
+      cell_to_change.status = player.symbol
     end
 
     def display
@@ -63,22 +62,20 @@ module TicTacToe
       true
     end
 
-    def winStateReached?
+    def winStateReached?(current_player)
 
-      @winState[:x_row] = checkRows(:x)
-      @winState[:x_col] = checkColumns(:x)
-      @winState[:x_diag] = checkDiagonals(:x)
+      @winState[:row] = checkRows(current_player.symbol)
+      @winState[:col] = checkColumns(current_player.symbol)
+      @winState[:diag] = checkDiagonals(current_player.symbol)
 
-      @winState[:o_row] = checkRows(:o)
-      @winState[:o_col] = checkColumns(:o)
-      @winState[:o_diag] = checkDiagonals(:o)
-
-
-      if @winState[:x_row] || @winState[:x_col] || @winState[:x_diag]
-        puts "Player 1 Wins!"
-      elsif @winState[:o_row] || @winState[:o_col] || @winState[:o_diag]
-        puts "Player 2 Wins!"
+      if @winState[:row] || @winState[:col] || @winState[:diag]
+        if current_player.id == 0
+          puts "Player 1 Wins!"
+        else
+          puts "Player 2 Wins!"
+        end
       end
+
 
       @winState.any? { |end_state, value| value }
     end

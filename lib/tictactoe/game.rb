@@ -20,8 +20,8 @@ module TicTacToe
     def defaults
       {board: TicTacToe::Board.new,
        current_player: nil,
-       player_one: TicTacToe::Player.new(id: 0),
-       player_two: TicTacToe::Player.new(id: 1),
+       player_one: TicTacToe::Player.new(id: 0, :symbol => :x),
+       player_two: TicTacToe::Player.new(id: 1, :symbol => :o),
        num_moves: 0}
     end
 
@@ -31,7 +31,7 @@ module TicTacToe
       begin
         puts
         @current_player = whoseTurn
-
+        #@board.move_symbol
         chosen_move_valid = false
 
         until chosen_move_valid
@@ -46,7 +46,7 @@ module TicTacToe
         @board.placeMove(current_player, player_move)
         @num_moves += 1
         @board.display
-      end until @board.winStateReached? || @board.boardFilled?
+      end until @board.winStateReached?(@current_player) || @board.boardFilled?
     end
 
     def whoseTurn
