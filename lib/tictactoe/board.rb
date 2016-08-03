@@ -8,7 +8,6 @@ module TicTacToe
     def initialize
       @grid = createBoard
       @winState = {}
-      @players = {}
       @move_symbol = nil
     end
 

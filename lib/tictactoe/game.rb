@@ -15,6 +15,11 @@ module TicTacToe
       @current_player = args[:current_player]
       @player_one = args[:player_one]
       @player_two = args[:player_two]
+      @ai = args[:ai]
+
+      if @ai
+        @player_one.ai = true
+      end
     end
 
     def defaults
@@ -22,7 +27,9 @@ module TicTacToe
        current_player: nil,
        player_one: TicTacToe::Player.new(id: 0, :symbol => :x),
        player_two: TicTacToe::Player.new(id: 1, :symbol => :o),
-       num_moves: 0}
+       num_moves: 0,
+       ai: false
+      }
     end
 
     def play
