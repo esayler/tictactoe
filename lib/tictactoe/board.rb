@@ -1,5 +1,4 @@
 require_relative 'cell'
-#require_relative 'game'
 
 module TicTacToe
   class Board
