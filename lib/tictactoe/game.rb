@@ -16,6 +16,7 @@ module TicTacToe
       @player_one = args[:player_one]
       @player_two = args[:player_two]
       @ai = args[:ai]
+      @random = args[:random]
 
       if @ai
         @player_one.ai = true
@@ -28,7 +29,8 @@ module TicTacToe
        player_one: TicTacToe::Player.new(id: 0, :symbol => :x),
        player_two: TicTacToe::Player.new(id: 1, :symbol => :o),
        num_moves: 0,
-       ai: false
+       ai: false,
+       random: Random.new
       }
     end
 
@@ -38,18 +40,19 @@ module TicTacToe
       begin
         puts
         @current_player = whoseTurn
-        #@board.move_symbol
-        chosen_move_valid = false
+        move_is_valid = false
+        player_move = nil
 
-        until chosen_move_valid
-          player_move = {row: nil, col: nil}
-          chosen_move = chooseMove
-          chosen_move_valid = @board.cellIsBlank?(chosen_move)
-          if chosen_move_valid
-            player_move = chosen_move
+        until move_is_valid
+          move = getMove
+
+          if @board.cellIsBlank?(move)
+            move_is_valid = true
+            player_move = move
           end
         end
 
+        #TODO: change to @current_player?
         @board.placeMove(current_player, player_move)
         @num_moves += 1
         @board.display
@@ -78,15 +81,27 @@ module TicTacToe
       end
     end
 
-    def chooseMove
-      chosen_move = {chosen_row: nil, chosen_col: nil}
+    def getMove
+      move = {row: nil, col: nil}
       user_row_input_valid, user_col_input_valid = false, false
 
-      chosen_move[:row] = getUserSelection(:row).to_i
-      chosen_move[:col] = getUserSelection(:col).to_i
+      if @current_player.ai
+        move = generateMove
+      else
+        move[:row] = getUserSelection(:row).to_i
+        move[:col] = getUserSelection(:col).to_i
+      end
 
       puts
-      chosen_move
+      move
+    end
+
+    def generateMove
+      generated_move = {}
+      generated_move[:row] = @random.rand(0..2)
+      generated_move[:col] = @random.rand(0..2)
+
+      return generated_move
     end
 
     def getUserSelection(axis)
